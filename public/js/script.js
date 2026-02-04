@@ -84,9 +84,28 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     // Mouse movement
+    // Mouse move
     window.addEventListener('mousemove', e => {
         mouse.x = e.clientX;
         mouse.y = e.clientY;
+    });
+    // Touch support
+    window.addEventListener('touchstart', e => {
+        if (e.touches.length > 0) {
+            mouse.x = e.touches[0].clientX;
+            mouse.y = e.touches[0].clientY;
+        }
+    });
+    window.addEventListener('touchmove', e => {
+        if (e.touches.length > 0) {
+            mouse.x = e.touches[0].clientX;
+            mouse.y = e.touches[0].clientY;
+        }
+    });
+    window.addEventListener('touchend', e => {
+        // On touch end, move mouse off screen so objects return
+        mouse.x = -1000;
+        mouse.y = -1000;
     });
 
     function animate() {
