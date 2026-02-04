@@ -1,3 +1,161 @@
+// --- Dynamic Background: Ribbons & Hearts ---
+window.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+
+    function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+    }
+    window.addEventListener('resize', resize);
+
+    // Heart and Ribbon objects
+    const hearts = [];
+    const ribbons = [];
+    const heartColor = '#8B0000'; // wine red
+    const ribbonColor = '#fff'; // white
+    const heartCount = 18;
+    const ribbonCount = 12;
+    const repelRadius = 120;
+    let mouse = { x: width/2, y: height/2 };
+
+    function randomBetween(a, b) {
+        return a + Math.random() * (b - a);
+    }
+
+    // Heart shape drawing
+    function drawHeart(x, y, size, color) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(x, y + size/4);
+        ctx.bezierCurveTo(x, y, x - size/2, y, x - size/2, y + size/4);
+        ctx.bezierCurveTo(x - size/2, y + size/2, x, y + size*0.8, x, y + size);
+        ctx.bezierCurveTo(x, y + size*0.8, x + size/2, y + size/2, x + size/2, y + size/4);
+        ctx.bezierCurveTo(x + size/2, y, x, y, x, y + size/4);
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.globalAlpha = 0.85;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.restore();
+    }
+
+    // Ribbon drawing (curved line)
+    function drawRibbon(x, y, len, angle, color) {
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.globalAlpha = 0.7;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.quadraticCurveTo(x + len/2 * Math.cos(angle + 0.5), y + len/2 * Math.sin(angle + 0.5), x + len * Math.cos(angle), y + len * Math.sin(angle));
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        ctx.restore();
+    }
+
+    // Initialize hearts
+    for (let i = 0; i < heartCount; i++) {
+        hearts.push({
+            x: randomBetween(40, width-40),
+            y: randomBetween(40, height-40),
+            size: randomBetween(18, 32),
+            vx: randomBetween(-0.5, 0.5),
+            vy: randomBetween(-0.5, 0.5)
+        });
+    }
+    // Initialize ribbons
+    for (let i = 0; i < ribbonCount; i++) {
+        ribbons.push({
+            x: randomBetween(0, width),
+            y: randomBetween(0, height),
+            len: randomBetween(60, 120),
+            angle: randomBetween(0, Math.PI*2),
+            vx: randomBetween(-0.3, 0.3),
+            vy: randomBetween(-0.3, 0.3),
+            va: randomBetween(-0.01, 0.01)
+        });
+    }
+
+    // Mouse movement
+    window.addEventListener('mousemove', e => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+    });
+
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+        // Hearts
+        for (let h of hearts) {
+            // Repel from mouse
+            let dx = h.x - mouse.x;
+            let dy = h.y - mouse.y;
+            let dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < repelRadius) {
+                let angle = Math.atan2(dy, dx);
+                let force = (repelRadius - dist) / repelRadius;
+                h.vx += Math.cos(angle) * force * 1.2;
+                h.vy += Math.sin(angle) * force * 1.2;
+            }
+            // Move
+            h.x += h.vx;
+            h.y += h.vy;
+            // Friction
+            h.vx *= 0.92;
+            h.vy *= 0.92;
+            // Return to center if far
+            if (h.x < 0 || h.x > width || h.y < 0 || h.y > height) {
+                h.x = randomBetween(40, width-40);
+                h.y = randomBetween(40, height-40);
+                h.vx = randomBetween(-0.5, 0.5);
+                h.vy = randomBetween(-0.5, 0.5);
+            }
+            drawHeart(h.x, h.y, h.size, heartColor);
+        }
+        // Ribbons
+        for (let r of ribbons) {
+            // Repel from mouse
+            let dx = r.x - mouse.x;
+            let dy = r.y - mouse.y;
+            let dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < repelRadius) {
+                let angle = Math.atan2(dy, dx);
+                let force = (repelRadius - dist) / repelRadius;
+                r.vx += Math.cos(angle) * force * 0.8;
+                r.vy += Math.sin(angle) * force * 0.8;
+            }
+            // Move
+            r.x += r.vx;
+            r.y += r.vy;
+            r.angle += r.va;
+            // Friction
+            r.vx *= 0.93;
+            r.vy *= 0.93;
+            r.va *= 0.98;
+            // Return to center if far
+            if (r.x < 0 || r.x > width || r.y < 0 || r.y > height) {
+                r.x = randomBetween(0, width);
+                r.y = randomBetween(0, height);
+                r.vx = randomBetween(-0.3, 0.3);
+                r.vy = randomBetween(-0.3, 0.3);
+                r.angle = randomBetween(0, Math.PI*2);
+            }
+            drawRibbon(r.x, r.y, r.len, r.angle, ribbonColor);
+        }
+        requestAnimationFrame(animate);
+    }
+    animate();
+});
+
+
+// --- End Dynamic Background ---
+
 const answers_no = {
     english: [
         "No",
