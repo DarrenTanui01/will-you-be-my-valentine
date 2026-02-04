@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;700&display=swap');
+
 body {
     background-color: #ffe4ec; /* light pink */
-    font-family: Arial, sans-serif;
+    font-family: 'Quicksand', Arial, sans-serif;
     margin: 0;
     padding: 0;
     display: flex;
@@ -35,34 +37,48 @@ body {
     flex-wrap: wrap;
 }
 
-#no-button {
-    margin: 0 10px;
-    color: white;
-    background-color: red;
-    height: 40px !important;
-    width: auto;
+
+/* Valentine-themed Buttons */
+#yes-button, #no-button {
+    margin: 0 14px;
+    color: #fff;
+    font-family: 'Pacifico', cursive;
+    font-size: 1.4rem;
     border: none;
+    border-radius: 32px;
+    padding: 0 36px;
+    height: 54px;
+    min-width: 120px;
+    box-shadow: 0 2px 12px rgba(215,38,96,0.10);
     cursor: pointer;
     margin-top: 10px;
-
-    p {
-        margin: 0;
-        object-fit: contain;
-    }
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    position: relative;
+    letter-spacing: 1px;
+    outline: none;
 }
 
 #yes-button {
-    margin: 0 10px;
-    color: white;
-    border: none;
-    background-color: green;
-    cursor: pointer;
-    height: 40px;
+    background: linear-gradient(90deg, #d72660 60%, #f46036 100%);
+    box-shadow: 0 4px 16px rgba(215,38,96,0.18);
+}
 
-    p {
-        margin: 0;
-        object-fit: contain;
-    }
+#no-button {
+    background: linear-gradient(90deg, #a23e48 60%, #d72660 100%);
+    box-shadow: 0 4px 16px rgba(162,62,72,0.18);
+}
+
+#yes-button:hover, #no-button:hover, #yes-button:active, #no-button:active {
+    transform: scale(1.07) rotate(-2deg);
+    box-shadow: 0 8px 32px rgba(215,38,96,0.22);
+    filter: brightness(1.08);
+}
+
+#yes-button p, #no-button p {
+    margin: 0;
+    object-fit: contain;
+    font-family: inherit;
+    font-size: inherit;
 }
 
 /* Make responsive for mobile */
@@ -72,6 +88,7 @@ body {
     }
 }
 
+/* Main container styles */
 .container {
     display: flex;
     justify-content: center;
@@ -82,6 +99,30 @@ body {
     text-align: center;
 }
 
+.container h1, #question-heading {
+    font-family: 'Pacifico', cursive;
+    color: #d72660;
+    font-size: 2.6rem;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px #fff3fa, 0 1px 0 #fff;
+}
+
+.container h2, #success-message {
+    font-family: 'Pacifico', cursive;
+    color: #d72660;
+    font-size: 2rem;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 8px #fff3fa, 0 1px 0 #fff;
+}
+
+.container h6, .creator {
+    font-family: 'Quicksand', Arial, sans-serif;
+    color: #a23e48;
+    font-size: 1rem;
+}
+
+
 .message {
     display: none;
 }
@@ -90,11 +131,13 @@ body {
     width: 100%;
     height: auto;
     margin-top: 20px;
+}
 
-    img {
-        width: auto;
-        height: 250px;
-    }
+.banner-gif img {
+    width: auto;
+    height: 200px;
+    border-radius: 28px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
 }
 
 .language-selector {
